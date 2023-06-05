@@ -17,6 +17,7 @@ model User {
   name        String        @db.VarChar(255)
   surname     String        @db.VarChar(255)
   cpf         String        @unique @db.VarChar(255)
+  phone       String        @db.VarChar(255)
   isOwner     Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
