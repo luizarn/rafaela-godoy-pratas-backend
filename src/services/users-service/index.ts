@@ -2,10 +2,17 @@ import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { duplicatedEmailError } from './errors';
 import userRepository from '@/repositories/user-repository';
-import { cannotEnrollBeforeStartDateError } from '@/errors';
 import { CreateUserParams } from '@/schemas';
 
-export async function createUser({ email, password, cpf, name, surname, isOwner, phone }: CreateUserParams): Promise<User> {
+export async function createUser({
+  email,
+  password,
+  cpf,
+  name,
+  surname,
+  isOwner,
+  phone,
+}: CreateUserParams): Promise<User> {
   await validateUniqueEmailOrFail(email);
 
   const hashedPassword = await bcrypt.hash(password, 12);

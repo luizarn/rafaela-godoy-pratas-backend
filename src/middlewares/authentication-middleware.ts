@@ -34,6 +34,21 @@ function generateUnauthorizedResponse(res: Response) {
   res.status(httpStatus.UNAUTHORIZED).send(unauthorizedError());
 }
 
+export async function authenticateOwner(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { userId } = req;
+  console.log('checando');
+  try {
+    const owner = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+    if (owner.isOwner === true) return next();
+  } catch (err) {
+    return generateUnauthorizedResponse(res);
+  }
+}
+
 export type AuthenticatedRequest = Request & JWTPayload;
 
 type JWTPayload = {
