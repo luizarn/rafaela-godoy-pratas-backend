@@ -24,9 +24,24 @@ async function create(data: Prisma.ProductUncheckedCreateInput) {
   return result;
 }
 
+async function listProductsByCategory(category: string) {
+  const result = await prisma.category.findFirst({
+    where: {
+      title: category,
+    },
+  });
+
+  return prisma.product.findMany({
+    where: {
+      categoryId: result.id,
+    },
+  });
+}
+
 const productsRepository = {
   findByTitle,
   create,
+  listProductsByCategory,
 };
 
 export default productsRepository;

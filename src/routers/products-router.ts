@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { createProductSchema } from '@/schemas';
 import { validateBody, handleUpload, uploadImage, authenticateToken, authenticateOwner } from '@/middlewares';
-import { createProduct } from '@/controllers';
+import { createProduct, listProductsByCategory } from '@/controllers';
 
 const productsRouter = Router();
 
 productsRouter
+  .get('/:category', listProductsByCategory)
   .all('/*', authenticateToken)
-  .post('/', authenticateOwner, uploadImage, handleUpload, validateBody(createProductSchema), createProduct);
-
+  .post('/produtos', authenticateOwner, uploadImage, handleUpload, validateBody(createProductSchema), createProduct);
 export { productsRouter };

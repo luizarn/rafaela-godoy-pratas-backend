@@ -1,7 +1,8 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import httpStatus from 'http-status';
 import productsService from '@/services/products-service';
 import { CustomRequest } from '@/middlewares/upload-image-middleware';
+import { AuthenticatedRequest } from '@/middlewares';
 
 export async function createProduct(req: CustomRequest, res: Response) {
   try {
@@ -32,20 +33,20 @@ export async function createProduct(req: CustomRequest, res: Response) {
   }
 }
 
-// //Listar todos os produtos
-// export async function listProducts(req, res) {
+//Listar todos os produtos
+export async function listProductsByCategory(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { category } = req.params;
+  if (!category) return res.sendStatus(httpStatus.BAD_REQUEST);
 
-//     try {
-
-//         const list = await db.collection('products').find().toArray()
-
-//         res.send(list)
-
-//     } catch (error) {
-//         res.status(500).send(error.message)
-//     }
-
-// }
+  try {
+    const products = await productsService.listProductsByCategory(category);
+    return res.status(httpStatus.OK).send({
+      products,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 // //Listar os mais vendidos / Por enquanto só retorna aleatóriamente
 // export async function betterSellers(req, res) {
 

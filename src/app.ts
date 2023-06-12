@@ -16,7 +16,7 @@ app
   .get('/health', (_req, res) => res.send('OK!'))
   .use('/users', usersRouter)
   .use('/auth', authenticationRouter)
-  .use('/products', productsRouter);
+  .use('/', productsRouter);
 
 export function init(): Promise<Express> {
   connectDb();
