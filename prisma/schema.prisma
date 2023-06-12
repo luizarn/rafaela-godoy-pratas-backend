@@ -32,3 +32,34 @@ model Session {
   updatedAt DateTime @updatedAt
   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  title     String        @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Product  Product[]
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  title     String        @unique @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Product  Product[]
+}
+
+model Product {
+  id          Int           @id @default(autoincrement())
+  title       String        @unique @db.VarChar(255)
+  description String        @db.VarChar(255)
+  price       Int           
+  publicUrl   String 
+  size        Int?        
+  categoryId  Int
+  tagId       Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Category    Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  Tag         Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+}
