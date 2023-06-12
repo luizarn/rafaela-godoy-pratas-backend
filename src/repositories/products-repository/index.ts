@@ -38,10 +38,19 @@ async function listProductsByCategory(category: string) {
   });
 }
 
+async function listProductByTitle(title: string) {
+  return prisma.product.findFirst({
+    where: {
+      title,
+    },
+  });
+}
+
 const productsRepository = {
   findByTitle,
   create,
   listProductsByCategory,
+  listProductByTitle,
 };
 
 export default productsRepository;
