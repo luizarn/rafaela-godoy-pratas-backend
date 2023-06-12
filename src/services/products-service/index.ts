@@ -27,6 +27,13 @@ export async function createProduct({
   });
 }
 
+async function validateUniqueTitleOrFail(title: string) {
+  const productWithSameEmail = await productsRepository.findByTitle(title);
+  if (productWithSameEmail) {
+    throw duplicatedTitleError();
+  }
+}
+
 async function listProductsByCategory(category: string) {
   const products = await productsRepository.listProductsByCategory(category);
 
@@ -35,16 +42,18 @@ async function listProductsByCategory(category: string) {
   return products;
 }
 
-async function validateUniqueTitleOrFail(title: string) {
-  const productWithSameEmail = await productsRepository.findByTitle(title);
-  if (productWithSameEmail) {
-    throw duplicatedTitleError();
-  }
+async function listProductByTitle(title: string) {
+  const product = await productsRepository.listProductByTitle(title);
+
+  if (!product) throw notFoundError();
+
+  return product;
 }
 
 const productsService = {
   createProduct,
   listProductsByCategory,
+  listProductByTitle,
 };
 
 export * from './errors';

@@ -39,14 +39,35 @@ export async function listProductsByCategory(req: AuthenticatedRequest, res: Res
   if (!category) return res.sendStatus(httpStatus.BAD_REQUEST);
 
   try {
-    const products = await productsService.listProductsByCategory(category);
+    const [products] = await productsService.listProductsByCategory(category);
     return res.status(httpStatus.OK).send({
-      products,
+      id: products.id,
+      publicUrl: products.publicUrl,
+      title: products.title,
+      price: products.price,
     });
   } catch (error) {
     next(error);
   }
 }
+
+export async function listProductByTitle(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { title } = req.params;
+  if (!title) return res.sendStatus(httpStatus.BAD_REQUEST);
+
+  try {
+    const product = await productsService.listProductByTitle(title);
+    return res.status(httpStatus.OK).send({
+      publicUrl: product.publicUrl,
+      title: product.title,
+      price: product.price,
+      description: product.description,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // //Listar os mais vendidos / Por enquanto só retorna aleatóriamente
 // export async function betterSellers(req, res) {
 
