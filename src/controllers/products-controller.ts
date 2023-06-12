@@ -75,6 +75,17 @@ export async function updateProduct(req: AuthenticatedRequest, res: Response, ne
     next(error);
   }
 }
+
+export async function deleteProduct(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { id } = req.params;
+
+  try {
+    const product = await productsService.deleteProduct(Number(id));
+    return res.status(httpStatus.OK).send(product);
+  } catch (error) {
+    next(error);
+  }
+}
 // //Listar os mais vendidos / Por enquanto só retorna aleatóriamente
 // export async function betterSellers(req, res) {
 

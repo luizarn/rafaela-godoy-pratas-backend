@@ -54,6 +54,13 @@ async function updateProduct(id: number, updatedFields: object) {
     data: updatedFields,
   });
 }
+async function deleteProduct(id: number) {
+  return prisma.product.delete({
+    where: {
+      id,
+    },
+  });
+}
 
 const productsRepository = {
   findByTitle,
@@ -61,6 +68,7 @@ const productsRepository = {
   listProductsByCategory,
   listProductByTitle,
   updateProduct,
+  deleteProduct,
 };
 
 export default productsRepository;
