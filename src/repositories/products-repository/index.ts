@@ -46,11 +46,29 @@ async function listProductByTitle(title: string) {
   });
 }
 
+async function updateProduct(id: number, updatedFields: object) {
+  return prisma.product.update({
+    where: {
+      id,
+    },
+    data: updatedFields,
+  });
+}
+async function deleteProduct(id: number) {
+  return prisma.product.delete({
+    where: {
+      id,
+    },
+  });
+}
+
 const productsRepository = {
   findByTitle,
   create,
   listProductsByCategory,
   listProductByTitle,
+  updateProduct,
+  deleteProduct,
 };
 
 export default productsRepository;

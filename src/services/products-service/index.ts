@@ -50,10 +50,28 @@ async function listProductByTitle(title: string) {
   return product;
 }
 
+async function updateProduct(id: number, updatedFields: object) {
+  const productUpdated = await productsRepository.updateProduct(id, updatedFields);
+
+  if (!productUpdated) throw notFoundError();
+
+  return productUpdated;
+}
+
+async function deleteProduct(id: number) {
+  const product = await productsRepository.deleteProduct(id);
+
+  if (!product) throw notFoundError();
+
+  return product;
+}
+
 const productsService = {
   createProduct,
   listProductsByCategory,
   listProductByTitle,
+  updateProduct,
+  deleteProduct,
 };
 
 export * from './errors';
