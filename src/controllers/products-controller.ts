@@ -39,13 +39,8 @@ export async function listProductsByCategory(req: AuthenticatedRequest, res: Res
   if (!category) return res.sendStatus(httpStatus.BAD_REQUEST);
 
   try {
-    const [products] = await productsService.listProductsByCategory(category);
-    return res.status(httpStatus.OK).send({
-      id: products.id,
-      publicUrl: products.publicUrl,
-      title: products.title,
-      price: products.price,
-    });
+    const products = await productsService.listProductsByCategory(category);
+    return res.status(httpStatus.OK).send(products);
   } catch (error) {
     next(error);
   }
@@ -68,6 +63,18 @@ export async function listProductByTitle(req: AuthenticatedRequest, res: Respons
   }
 }
 
+export async function updateProduct(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { id } = req.params;
+  const { updatedFields } = req.body;
+  if (!updatedFields) return res.sendStatus(httpStatus.BAD_REQUEST);
+
+  try {
+    const product = await productsService.updateProduct(Number(id), updatedFields);
+    return res.status(httpStatus.OK).send(product);
+  } catch (error) {
+    next(error);
+  }
+}
 // //Listar os mais vendidos / Por enquanto só retorna aleatóriamente
 // export async function betterSellers(req, res) {
 
@@ -88,17 +95,6 @@ export async function listProductByTitle(req: AuthenticatedRequest, res: Respons
 //         res.status(500).send(error.message)
 //     }
 
-// }
-// //Cadastrar Produto
-// export async function registerProduct(req, res) {
-//     const { name, description, price, quantity, imgURL } = req.body
-//     try {
-//         await db.collection('products').insertOne({ name, description, price, quantity, imgURL })
-//         res.sendStatus(201)
-//     } catch (error
-//         ) {
-//         res.status(500).send(error.message)
-//     }
 // }
 
 // //Deletar produto

@@ -46,11 +46,21 @@ async function listProductByTitle(title: string) {
   });
 }
 
+async function updateProduct(id: number, updatedFields: object) {
+  return prisma.product.update({
+    where: {
+      id,
+    },
+    data: updatedFields,
+  });
+}
+
 const productsRepository = {
   findByTitle,
   create,
   listProductsByCategory,
   listProductByTitle,
+  updateProduct,
 };
 
 export default productsRepository;
