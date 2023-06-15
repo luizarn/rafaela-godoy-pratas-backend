@@ -4,17 +4,36 @@ import productsService from '@/services/products-service';
 import { CustomRequest } from '@/middlewares/upload-image-middleware';
 import { AuthenticatedRequest } from '@/middlewares';
 
+export async function getCategories(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+  try {
+    const categories = await productsService.getCategories();
+    return res.status(httpStatus.OK).send(categories);
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function getTags(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+  try {
+    const tags = await productsService.getTags();
+    return res.status(httpStatus.OK).send(tags);
+  } catch (e) {
+    next(e);
+  }
+}
+
 export async function createProduct(req: CustomRequest, res: Response) {
   try {
     const { userId } = req;
     console.log(userId);
-    const { title, description, price, categoryId, tagId, size } = req.body;
+    const { title, description, price, categoryId, tagId, size, quantity } = req.body;
     const { publicUrl } = req;
     console.log(`a imagem é ${publicUrl}`);
 
     const product = await productsService.createProduct({
       title,
       description,
+      quantity: Number(quantity),
       price: Number(price),
       categoryId: Number(categoryId),
       tagId: Number(tagId),

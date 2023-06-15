@@ -8,11 +8,32 @@ async function main() {
     await prisma.category.createMany({
       data: [
         {
-          title: 'aneis',
+          title: 'anéis',
         },
         {
         title: 'pulseiras',
         },
+        {
+          title: 'brincos',
+          },
+          {
+            title: 'colares',
+            },
+        {
+          title: 'conjuntos',
+          },
+         {
+        title: 'piercings',
+        },
+        {
+          title: 'pingentes',
+          },
+          {
+            title: 'tornozeleiras',
+            },
+            {
+              title: 'correntes sem pingentes',
+              },
       ],
     });
   }
@@ -26,6 +47,45 @@ async function main() {
         },
         {
             title: 'coração',
+           },
+           {
+            title: 'cravejado',
+           },
+           {
+            title: 'bolinha',
+           },
+           {
+            title: 'ponto de luz',
+           },
+           {
+            title: 'triângulo',
+           },
+           {
+            title: 'argola',
+           },
+           {
+            title: 'escapulário',
+           },
+           {
+            title: 'olho grego',
+           },
+           {
+            title: 'animal',
+           },
+           {
+            title: 'luxo',
+           },
+           {
+            title: 'fake',
+           },
+           {
+            title: 'cruz',
+           },
+           {
+            title: 'corrente',
+           },
+           {
+            title: 'riviera',
            },
       ],
     });

@@ -1,6 +1,14 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
+async function getCategories() {
+  return prisma.category.findMany();
+}
+
+async function getTags() {
+  return prisma.tag.findMany();
+}
+
 async function findByTitle(title: string, select?: Prisma.ProductSelect) {
   const params: Prisma.ProductFindUniqueArgs = {
     where: {
@@ -69,6 +77,8 @@ const productsRepository = {
   listProductByTitle,
   updateProduct,
   deleteProduct,
+  getCategories,
+  getTags,
 };
 
 export default productsRepository;

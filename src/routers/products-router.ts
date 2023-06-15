@@ -1,11 +1,21 @@
 import { Router } from 'express';
 import { createProductSchema } from '@/schemas';
 import { validateBody, handleUpload, uploadImage, authenticateToken, authenticateOwner } from '@/middlewares';
-import { createProduct, deleteProduct, listProductByTitle, listProductsByCategory, updateProduct } from '@/controllers';
+import {
+  createProduct,
+  deleteProduct,
+  getCategories,
+  getTags,
+  listProductByTitle,
+  listProductsByCategory,
+  updateProduct,
+} from '@/controllers';
 
 const productsRouter = Router();
 
 productsRouter
+  .get('/categories', getCategories)
+  .get('/tags', getTags)
   .get('/:category', listProductsByCategory)
   .get('/produtos/:title', listProductByTitle)
   .all('/*', authenticateToken)

@@ -5,6 +5,22 @@ import { notFoundError } from '@/errors';
 
 export type ProductParams = Omit<Product, 'createdAt' | 'updatedAt' | 'id'>;
 
+async function getCategories() {
+  const categories = await productsRepository.getCategories();
+
+  if (!categories) throw notFoundError();
+
+  return categories;
+}
+
+async function getTags() {
+  const tags = await productsRepository.getTags();
+
+  if (!tags) throw notFoundError();
+
+  return tags;
+}
+
 export async function createProduct({
   title,
   description,
@@ -13,6 +29,7 @@ export async function createProduct({
   tagId,
   size,
   publicUrl,
+  quantity,
 }: ProductParams): Promise<Product> {
   await validateUniqueTitleOrFail(title);
 
@@ -24,6 +41,7 @@ export async function createProduct({
     tagId,
     size,
     publicUrl,
+    quantity,
   });
 }
 
@@ -72,6 +90,8 @@ const productsService = {
   listProductByTitle,
   updateProduct,
   deleteProduct,
+  getCategories,
+  getTags,
 };
 
 export * from './errors';
