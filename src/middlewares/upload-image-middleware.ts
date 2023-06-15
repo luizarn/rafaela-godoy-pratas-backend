@@ -11,8 +11,8 @@ export interface CustomRequest extends AuthenticatedRequest {
 const s3 = new S3Client({
   region: 'sa-east-1',
   credentials: {
-    accessKeyId: 'AKIAXYRNNAHI23HTK6EI',
-    secretAccessKey: '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',
+    accessKeyId: process.env.ACCESSKEYID,
+    secretAccessKey: process.env.SECRETACCESSKEY,
   },
 });
 
