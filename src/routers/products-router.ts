@@ -5,6 +5,7 @@ import {
   createProduct,
   deleteProduct,
   getCategories,
+  getProducts,
   getTags,
   listProductByTitle,
   listProductsByCategory,
@@ -15,6 +16,8 @@ const productsRouter = Router();
 
 productsRouter
   .get('/categories', getCategories)
+  .get('/tags', getTags)
+  .get('/admin/products', getProducts)
   .get('/tags', getTags)
   .get('/:category', listProductsByCategory)
   .get('/produtos/:title', listProductByTitle)

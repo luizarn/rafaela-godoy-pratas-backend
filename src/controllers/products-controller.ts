@@ -1,5 +1,6 @@
 import { NextFunction, Response } from 'express';
 import httpStatus from 'http-status';
+import { Prisma } from '@prisma/client';
 import productsService from '@/services/products-service';
 import { CustomRequest } from '@/middlewares/upload-image-middleware';
 import { AuthenticatedRequest } from '@/middlewares';
@@ -22,11 +23,20 @@ export async function getTags(req: AuthenticatedRequest, res: Response, next: Ne
   }
 }
 
+export async function getProducts(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+  try {
+    const products = await productsService.getProducts();
+    return res.status(httpStatus.OK).send(products);
+  } catch (e) {
+    next(e);
+  }
+}
+
 export async function createProduct(req: CustomRequest, res: Response) {
   try {
     const { userId } = req;
     console.log(userId);
-    const { title, description, price, categoryId, tagId, size, quantity } = req.body;
+    const { title, description, price, categoryId, tagId, quantity } = req.body;
     const { publicUrl } = req;
     console.log(`a imagem é ${publicUrl}`);
 
@@ -34,10 +44,9 @@ export async function createProduct(req: CustomRequest, res: Response) {
       title,
       description,
       quantity: Number(quantity),
-      price: Number(price),
+      price: new Prisma.Decimal(price),
       categoryId: Number(categoryId),
       tagId: Number(tagId),
-      size: Number(size),
       publicUrl,
     });
     return res.status(httpStatus.CREATED).json({
@@ -52,7 +61,6 @@ export async function createProduct(req: CustomRequest, res: Response) {
   }
 }
 
-//Listar todos os produtos
 export async function listProductsByCategory(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { category } = req.params;
   if (!category) return res.sendStatus(httpStatus.BAD_REQUEST);

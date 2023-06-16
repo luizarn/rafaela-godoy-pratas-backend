@@ -9,6 +9,15 @@ async function getTags() {
   return prisma.tag.findMany();
 }
 
+async function getProducts() {
+  return prisma.product.findMany({
+    include: {
+      Category: true,
+      Tag: true,
+    },
+  });
+}
+
 async function findByTitle(title: string, select?: Prisma.ProductSelect) {
   const params: Prisma.ProductFindUniqueArgs = {
     where: {
@@ -79,6 +88,7 @@ const productsRepository = {
   deleteProduct,
   getCategories,
   getTags,
+  getProducts,
 };
 
 export default productsRepository;
