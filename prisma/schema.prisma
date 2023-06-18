@@ -53,7 +53,8 @@ model Product {
   id          Int           @id @default(autoincrement())
   title       String        @unique @db.VarChar(255)
   description String        @db.VarChar(255)
-  price       Int           
+  price       Decimal         @db.Decimal(10, 2)
+  quantity    Int         @default(0)
   publicUrl   String 
   size        Int?        
   categoryId  Int

@@ -36,7 +36,6 @@ function generateUnauthorizedResponse(res: Response) {
 
 export async function authenticateOwner(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { userId } = req;
-  console.log('checando');
   try {
     const owner = await prisma.user.findFirst({
       where: {

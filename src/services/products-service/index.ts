@@ -3,7 +3,31 @@ import { duplicatedTitleError } from './errors';
 import productsRepository from '@/repositories/products-repository';
 import { notFoundError } from '@/errors';
 
-export type ProductParams = Omit<Product, 'createdAt' | 'updatedAt' | 'id'>;
+export type ProductParams = Omit<Product, 'createdAt' | 'updatedAt' | 'id' | 'size'>;
+
+async function getCategories() {
+  const categories = await productsRepository.getCategories();
+
+  if (!categories) throw notFoundError();
+
+  return categories;
+}
+
+async function getTags() {
+  const tags = await productsRepository.getTags();
+
+  if (!tags) throw notFoundError();
+
+  return tags;
+}
+
+async function getProducts() {
+  const products = await productsRepository.getProducts();
+
+  if (!products) throw notFoundError();
+
+  return products;
+}
 
 export async function createProduct({
   title,
@@ -11,8 +35,8 @@ export async function createProduct({
   price,
   categoryId,
   tagId,
-  size,
   publicUrl,
+  quantity,
 }: ProductParams): Promise<Product> {
   await validateUniqueTitleOrFail(title);
 
@@ -22,8 +46,8 @@ export async function createProduct({
     price,
     categoryId,
     tagId,
-    size,
     publicUrl,
+    quantity,
   });
 }
 
@@ -72,6 +96,9 @@ const productsService = {
   listProductByTitle,
   updateProduct,
   deleteProduct,
+  getCategories,
+  getTags,
+  getProducts,
 };
 
 export * from './errors';

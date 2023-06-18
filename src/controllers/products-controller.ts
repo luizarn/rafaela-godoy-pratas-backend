@@ -1,24 +1,52 @@
 import { NextFunction, Response } from 'express';
 import httpStatus from 'http-status';
+import { Prisma } from '@prisma/client';
 import productsService from '@/services/products-service';
 import { CustomRequest } from '@/middlewares/upload-image-middleware';
 import { AuthenticatedRequest } from '@/middlewares';
+
+export async function getCategories(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+  try {
+    const categories = await productsService.getCategories();
+    return res.status(httpStatus.OK).send(categories);
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function getTags(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+  try {
+    const tags = await productsService.getTags();
+    return res.status(httpStatus.OK).send(tags);
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function getProducts(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+  try {
+    const products = await productsService.getProducts();
+    return res.status(httpStatus.OK).send(products);
+  } catch (e) {
+    next(e);
+  }
+}
 
 export async function createProduct(req: CustomRequest, res: Response) {
   try {
     const { userId } = req;
     console.log(userId);
-    const { title, description, price, categoryId, tagId, size } = req.body;
+    const { title, description, price, categoryId, tagId, quantity } = req.body;
     const { publicUrl } = req;
     console.log(`a imagem é ${publicUrl}`);
 
     const product = await productsService.createProduct({
       title,
       description,
-      price: Number(price),
+      quantity: Number(quantity),
+      price: new Prisma.Decimal(price),
       categoryId: Number(categoryId),
       tagId: Number(tagId),
-      size: Number(size),
       publicUrl,
     });
     return res.status(httpStatus.CREATED).json({
@@ -33,7 +61,6 @@ export async function createProduct(req: CustomRequest, res: Response) {
   }
 }
 
-//Listar todos os produtos
 export async function listProductsByCategory(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { category } = req.params;
   if (!category) return res.sendStatus(httpStatus.BAD_REQUEST);
@@ -52,12 +79,7 @@ export async function listProductByTitle(req: AuthenticatedRequest, res: Respons
 
   try {
     const product = await productsService.listProductByTitle(title);
-    return res.status(httpStatus.OK).send({
-      publicUrl: product.publicUrl,
-      title: product.title,
-      price: product.price,
-      description: product.description,
-    });
+    return res.status(httpStatus.OK).send(product);
   } catch (error) {
     next(error);
   }
@@ -66,6 +88,7 @@ export async function listProductByTitle(req: AuthenticatedRequest, res: Respons
 export async function updateProduct(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { id } = req.params;
   const { updatedFields } = req.body;
+  console.log(updatedFields);
   if (!updatedFields) return res.sendStatus(httpStatus.BAD_REQUEST);
 
   try {

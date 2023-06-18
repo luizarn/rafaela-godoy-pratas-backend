@@ -1,18 +1,29 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
-async function findByTitle(title: string, select?: Prisma.ProductSelect) {
-  const params: Prisma.ProductFindUniqueArgs = {
+async function getCategories() {
+  return prisma.category.findMany();
+}
+
+async function getTags() {
+  return prisma.tag.findMany();
+}
+
+async function getProducts() {
+  return prisma.product.findMany({
+    include: {
+      Category: true,
+      Tag: true,
+    },
+  });
+}
+
+async function findByTitle(title: string) {
+  return prisma.product.findUnique({
     where: {
       title,
     },
-  };
-
-  if (select) {
-    params.select = select;
-  }
-
-  return prisma.product.findUnique(params);
+  });
 }
 
 async function create(data: Prisma.ProductUncheckedCreateInput) {
@@ -69,6 +80,9 @@ const productsRepository = {
   listProductByTitle,
   updateProduct,
   deleteProduct,
+  getCategories,
+  getTags,
+  getProducts,
 };
 
 export default productsRepository;
