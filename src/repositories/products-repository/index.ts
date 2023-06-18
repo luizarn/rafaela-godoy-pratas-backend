@@ -18,18 +18,12 @@ async function getProducts() {
   });
 }
 
-async function findByTitle(title: string, select?: Prisma.ProductSelect) {
-  const params: Prisma.ProductFindUniqueArgs = {
+async function findByTitle(title: string) {
+  return prisma.product.findUnique({
     where: {
       title,
     },
-  };
-
-  if (select) {
-    params.select = select;
-  }
-
-  return prisma.product.findUnique(params);
+  });
 }
 
 async function create(data: Prisma.ProductUncheckedCreateInput) {

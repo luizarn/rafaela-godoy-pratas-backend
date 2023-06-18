@@ -79,12 +79,7 @@ export async function listProductByTitle(req: AuthenticatedRequest, res: Respons
 
   try {
     const product = await productsService.listProductByTitle(title);
-    return res.status(httpStatus.OK).send({
-      publicUrl: product.publicUrl,
-      title: product.title,
-      price: product.price,
-      description: product.description,
-    });
+    return res.status(httpStatus.OK).send(product);
   } catch (error) {
     next(error);
   }
@@ -93,6 +88,7 @@ export async function listProductByTitle(req: AuthenticatedRequest, res: Respons
 export async function updateProduct(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { id } = req.params;
   const { updatedFields } = req.body;
+  console.log(updatedFields);
   if (!updatedFields) return res.sendStatus(httpStatus.BAD_REQUEST);
 
   try {
