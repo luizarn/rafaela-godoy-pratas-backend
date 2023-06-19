@@ -27,11 +27,9 @@ async function findByTitle(title: string) {
 }
 
 async function create(data: Prisma.ProductUncheckedCreateInput) {
-  console.log('chegou no reposiroy');
   const result = await prisma.product.create({
     data,
   });
-  console.log(result);
   return result;
 }
 
@@ -73,6 +71,22 @@ async function deleteProduct(id: number) {
   });
 }
 
+async function listProductsByEmphasis() {
+  return prisma.product.findMany({
+    where: {
+      emphasis: true,
+    },
+  });
+}
+
+async function listProductsByLaunch() {
+  return prisma.product.findMany({
+    where: {
+      launch: true,
+    },
+  });
+}
+
 const productsRepository = {
   findByTitle,
   create,
@@ -83,6 +97,8 @@ const productsRepository = {
   getCategories,
   getTags,
   getProducts,
+  listProductsByLaunch,
+  listProductsByEmphasis,
 };
 
 export default productsRepository;

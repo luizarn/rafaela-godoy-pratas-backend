@@ -1,5 +1,5 @@
 import { Product } from '@prisma/client';
-import { duplicatedTitleError } from './errors';
+import { duplicatedTitleError, maximumLimitEmphasisError, maximumLimitLaunchError } from './errors';
 import productsRepository from '@/repositories/products-repository';
 import { notFoundError } from '@/errors';
 
@@ -37,8 +37,18 @@ export async function createProduct({
   tagId,
   publicUrl,
   quantity,
+  emphasis,
+  launch,
 }: ProductParams): Promise<Product> {
   await validateUniqueTitleOrFail(title);
+
+  if (emphasis === true) {
+    validateLimitEmphasis();
+  }
+
+  if (launch === true) {
+    validateLimitLaunch();
+  }
 
   return productsRepository.create({
     title,
@@ -48,6 +58,8 @@ export async function createProduct({
     tagId,
     publicUrl,
     quantity,
+    emphasis,
+    launch,
   });
 }
 
@@ -90,6 +102,39 @@ async function deleteProduct(id: number) {
   return product;
 }
 
+async function listProductsByEmphasis() {
+  const products = await productsRepository.listProductsByEmphasis();
+
+  if (!products) throw notFoundError();
+
+  return products;
+}
+
+async function listProductsByLaunch() {
+  const products = await productsRepository.listProductsByLaunch();
+
+  if (!products) throw notFoundError();
+
+  return products;
+}
+
+async function validateLimitEmphasis() {
+  const productsWithEmphasis = await listProductsByEmphasis();
+  const emphasisLimit = 12;
+
+  if (productsWithEmphasis.length >= emphasisLimit) {
+    throw maximumLimitEmphasisError();
+  }
+}
+async function validateLimitLaunch() {
+  const productsWithLaunch = await listProductsByLaunch();
+  const lauchLimit = 12;
+
+  if (productsWithLaunch.length >= lauchLimit) {
+    throw maximumLimitLaunchError();
+  }
+}
+
 const productsService = {
   createProduct,
   listProductsByCategory,
@@ -99,6 +144,10 @@ const productsService = {
   getCategories,
   getTags,
   getProducts,
+  listProductsByLaunch,
+  listProductsByEmphasis,
+  validateLimitEmphasis,
+  validateLimitLaunch,
 };
 
 export * from './errors';

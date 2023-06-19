@@ -9,6 +9,8 @@ import {
   getTags,
   listProductByTitle,
   listProductsByCategory,
+  listProductsByEmphasis,
+  listProductsByLaunch,
   updateProduct,
 } from '@/controllers';
 
@@ -16,6 +18,8 @@ const productsRouter = Router();
 
 productsRouter
   .get('/categories', getCategories)
+  .get('/emphasis', listProductsByEmphasis)
+  .get('/launch', listProductsByLaunch)
   .get('/tags', getTags)
   .get('/admin/products', getProducts)
   .get('/tags', getTags)
