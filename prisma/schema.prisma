@@ -59,6 +59,8 @@ model Product {
   size        Int?        
   categoryId  Int
   tagId       Int
+  emphasis    Boolean     @default(false)
+  launch      Boolean     @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   Category    Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)

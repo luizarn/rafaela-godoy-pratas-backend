@@ -8,6 +8,8 @@ export const createProductSchema = Joi.object<CreateProductParams>({
   quantity: Joi.number().required(),
   categoryId: Joi.number().required(),
   tagId: Joi.number().required(),
+  emphasis: Joi.boolean().required(),
+  launch: Joi.boolean().required(),
 });
 
 export type CreateProductParams = Omit<Product, 'createdAt' | 'updatedAt' | 'id' | 'publicUrl' | 'size'>;

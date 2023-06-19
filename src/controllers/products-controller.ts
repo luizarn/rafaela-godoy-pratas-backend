@@ -36,7 +36,7 @@ export async function createProduct(req: CustomRequest, res: Response) {
   try {
     const { userId } = req;
     console.log(userId);
-    const { title, description, price, categoryId, tagId, quantity } = req.body;
+    const { title, description, price, categoryId, tagId, quantity, emphasis, launch } = req.body;
     const { publicUrl } = req;
     console.log(`a imagem é ${publicUrl}`);
 
@@ -48,6 +48,8 @@ export async function createProduct(req: CustomRequest, res: Response) {
       categoryId: Number(categoryId),
       tagId: Number(tagId),
       publicUrl,
+      emphasis: emphasis === 'true',
+      launch: launch === 'true',
     });
     return res.status(httpStatus.CREATED).json({
       id: product.id,
@@ -109,37 +111,29 @@ export async function deleteProduct(req: AuthenticatedRequest, res: Response, ne
     next(error);
   }
 }
-// //Listar os mais vendidos / Por enquanto só retorna aleatóriamente
-// export async function betterSellers(req, res) {
 
-//     try {
+export async function listProductsByEmphasis(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<Response> {
+  try {
+    const products = await productsService.listProductsByEmphasis();
+    return res.status(httpStatus.OK).send(products);
+  } catch (e) {
+    next(e);
+  }
+}
 
-//         const bs = await db.collection('products').find().limit(10).toArray()
-//         let aux = []
-//         while (aux.length < bs.length) {
-//             let n = Math.floor(Math.random() * bs.length)
-//             if (!aux.includes(bs[n])) {
-//                 aux.push(bs[n])
-//             }
-//         }
-
-//         res.send(aux)
-
-//     } catch (error) {
-//         res.status(500).send(error.message)
-//     }
-
-// }
-
-// //Deletar produto
-// export async function deleteProduct(req, res) {
-//     const { id } = req.params;
-
-//     try {
-//         await db.collection('products').deleteOne({ _id: ObjectId(id) })
-//         res.status(202).send("Ok")
-//     } catch (error
-//         ) {
-//         res.status(500).send(error.message)
-//     }
-// }
+export async function listProductsByLaunch(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<Response> {
+  try {
+    const products = await productsService.listProductsByLaunch();
+    return res.status(httpStatus.OK).send(products);
+  } catch (e) {
+    next(e);
+  }
+}
