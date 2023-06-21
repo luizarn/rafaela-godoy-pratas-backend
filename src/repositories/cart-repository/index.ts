@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { CartItem, Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
 // async function getCategories() {
@@ -26,6 +26,8 @@ import { prisma } from '@/config';
 //   });
 // }
 
+export type CartItemParams = Omit<CartItem, 'createdAt' | 'updatedAt' | 'id'>;
+
 async function create(userId: number) {
   return await prisma.cart.create({
     data: {
@@ -42,15 +44,15 @@ async function findByUserId(userId: number) {
   });
 }
 
-// async function createCartItem(cartId: number, productId: number, quantity: number) {
-//   return await prisma.cartItem.create({
-//     data: {
-//       cartId,
-//       productId,
-//       quantity,
-//     },
-//   });
-// }
+async function createCartItem(cartId: number, productId: number, quantity: number) {
+  return await prisma.cartItem.create({
+    data: {
+      cartId,
+      productId,
+      quantity,
+    },
+  });
+}
 
 // async function deleteCartItem(cartId: number, productId: number, quantity: number) {
 //   return await prisma.cartItem.delete({
