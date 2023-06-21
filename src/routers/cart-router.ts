@@ -1,24 +1,15 @@
 import { Router } from 'express';
 import { createProductSchema } from '@/schemas';
-import { validateBody, handleUpload, uploadImage, authenticateToken, authenticateOwner } from '@/middlewares';
-import {
-  createProduct,
-  deleteProduct,
-  getCategories,
-  getProducts,
-  getTags,
-  listProductByTitle,
-  listProductsByCategory,
-  listProductsByEmphasis,
-  listProductsByLaunch,
-  updateProduct,
-} from '@/controllers';
+import { validateBody, authenticateToken } from '@/middlewares';
+import { createCartItem } from '@/controllers';
+import { deleteCartItem, getCartItems } from '@/controllers/cart-controller';
 
 const cartRouter = Router();
 
 cartRouter
   .all('/*', authenticateToken)
-  .get('/', getCategories)
-  .post('/produtos', uploadImage, handleUpload, validateBody(createProductSchema), createProduct)
-  .delete('/produtos/:id', deleteProduct);
+  .post('/', createCartItem)
+  .get('/user', getCartItems)
+  .delete('/user/:id', deleteCartItem);
+
 export { cartRouter };
