@@ -3,6 +3,7 @@ import { CartItem } from '@prisma/client';
 // import productsRepository from '@/repositories/products-repository';
 // import { notFoundError } from '@/errors';
 import cartRepository from '@/repositories/cart-repository';
+import { notFoundError } from '@/errors';
 
 export type ProductParams = Omit<CartItem, 'createdAt' | 'updatedAt' | 'id'>;
 
@@ -36,19 +37,21 @@ export async function createCartItem(userId: number, productId: number, quantity
   return cartRepository.createCartItem(cart.id, productId, quantity);
 }
 
+export async function listCartItems(userId: number) {
+  const cart = await cartRepository.findByUserId(userId);
+
+  const cartItems = await cartRepository.listCartItems(cart.id);
+
+  if (!cartItems) throw notFoundError();
+
+  return cartItems;
+}
+
 // async function validateUniqueTitleOrFail(title: string) {
 //   const productWithSameEmail = await productsRepository.findByTitle(title);
 //   if (productWithSameEmail) {
 //     throw duplicatedTitleError();
 //   }
-// }
-
-// async function listProductsByCategory(category: string) {
-//   const products = await productsRepository.listProductsByCategory(category);
-
-//   if (!products) throw notFoundError();
-
-//   return products;
 // }
 
 // async function listProductByTitle(title: string) {
@@ -110,6 +113,7 @@ export async function createCartItem(userId: number, productId: number, quantity
 
 const cartService = {
   createCartItem,
+  listCartItems,
 };
 
 export default cartService;

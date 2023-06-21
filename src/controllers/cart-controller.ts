@@ -15,3 +15,14 @@ export async function createCartItem(req: AuthenticatedRequest, res: Response) {
     return res.status(httpStatus.BAD_REQUEST).send(console.log(error));
   }
 }
+
+export async function getCartItems(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { userId } = req;
+
+  try {
+    const cartItems = await cartService.listCartItems(userId);
+    return res.status(httpStatus.OK).send(cartItems);
+  } catch (error) {
+    next(error);
+  }
+}

@@ -45,11 +45,23 @@ async function findByUserId(userId: number) {
 }
 
 async function createCartItem(cartId: number, productId: number, quantity: number) {
+  console.log('ta chegando no repository');
   return await prisma.cartItem.create({
     data: {
       cartId,
       productId,
       quantity,
+    },
+  });
+}
+
+async function listCartItems(cartId: number) {
+  return await prisma.cartItem.findMany({
+    where: {
+      cartId,
+    },
+    include: {
+      product: true,
     },
   });
 }
@@ -61,13 +73,6 @@ async function createCartItem(cartId: number, productId: number, quantity: numbe
 //       },
 //     });
 //   }
-
-// async function listProductsByCategory(category: string) {
-//   const result = await prisma.category.findFirst({
-//     where: {
-//       title: category,
-//     },
-//   });
 
 //   return prisma.product.findMany({
 //     where: {
@@ -120,6 +125,7 @@ const cartRepository = {
   create,
   findByUserId,
   createCartItem,
+  listCartItems,
 };
 
 export default cartRepository;

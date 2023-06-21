@@ -1,13 +1,11 @@
 import { Router } from 'express';
 import { createProductSchema } from '@/schemas';
-import { validateBody, handleUpload, uploadImage, authenticateToken, authenticateOwner } from '@/middlewares';
+import { validateBody, authenticateToken } from '@/middlewares';
 import { createCartItem } from '@/controllers';
+import { getCartItems } from '@/controllers/cart-controller';
 
 const cartRouter = Router();
 
-cartRouter
-  .all('/*', authenticateToken)
-  // .get('/', getCategories)
-  .post('/', createCartItem);
-// .delete('/produtos/:id', deleteProduct);
+cartRouter.all('/*', authenticateToken).post('/', createCartItem).get('/user', getCartItems);
+
 export { cartRouter };
