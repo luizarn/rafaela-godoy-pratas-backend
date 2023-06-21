@@ -7,38 +7,14 @@ import { notFoundError } from '@/errors';
 
 export type ProductParams = Omit<CartItem, 'createdAt' | 'updatedAt' | 'id'>;
 
-// async function getCategories() {
-//   const categories = await productsRepository.getCategories();
-
-//   if (!categories) throw notFoundError();
-
-//   return categories;
-// }
-
-// async function getTags() {
-//   const tags = await productsRepository.getTags();
-
-//   if (!tags) throw notFoundError();
-
-//   return tags;
-// }
-
-// async function getProducts() {
-//   const products = await productsRepository.getProducts();
-
-//   if (!products) throw notFoundError();
-
-//   return products;
-// }
-
 export async function createCartItem(userId: number, productId: number, quantity: number): Promise<CartItem> {
-  const cart = await cartRepository.findByUserId(userId);
+  const cart = await validateIfHasCart(userId);
 
   return cartRepository.createCartItem(cart.id, productId, quantity);
 }
 
 export async function listCartItems(userId: number) {
-  const cart = await cartRepository.findByUserId(userId);
+  const cart = await validateIfHasCart(userId);
 
   const cartItems = await cartRepository.listCartItems(cart.id);
 
@@ -47,36 +23,21 @@ export async function listCartItems(userId: number) {
   return cartItems;
 }
 
-// async function validateUniqueTitleOrFail(title: string) {
-//   const productWithSameEmail = await productsRepository.findByTitle(title);
-//   if (productWithSameEmail) {
-//     throw duplicatedTitleError();
-//   }
-// }
+async function validateIfHasCart(userId: number) {
+  const cart = await cartRepository.findByUserId(userId);
+  if (!cart) throw notFoundError();
+  return cart;
+}
 
-// async function listProductByTitle(title: string) {
-//   const product = await productsRepository.listProductByTitle(title);
+async function deleteCartItem(id: number, userId: number) {
+  const cart = await validateIfHasCart(userId);
 
-//   if (!product) throw notFoundError();
+  const cartItem = await cartRepository.deleteCartItem(id, cart.id);
 
-//   return product;
-// }
+  if (!cartItem) throw notFoundError();
 
-// async function updateProduct(id: number, updatedFields: object) {
-//   const productUpdated = await productsRepository.updateProduct(id, updatedFields);
-
-//   if (!productUpdated) throw notFoundError();
-
-//   return productUpdated;
-// }
-
-// async function deleteProduct(id: number) {
-//   const product = await productsRepository.deleteProduct(id);
-
-//   if (!product) throw notFoundError();
-
-//   return product;
-// }
+  return cartItem;
+}
 
 // async function listProductsByEmphasis() {
 //   const products = await productsRepository.listProductsByEmphasis();
@@ -114,6 +75,7 @@ export async function listCartItems(userId: number) {
 const cartService = {
   createCartItem,
   listCartItems,
+  deleteCartItem,
 };
 
 export default cartService;

@@ -26,3 +26,15 @@ export async function getCartItems(req: AuthenticatedRequest, res: Response, nex
     next(error);
   }
 }
+
+export async function deleteCartItem(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { id } = req.params;
+  const { userId } = req;
+
+  try {
+    const cartItem = await cartService.deleteCartItem(Number(id), userId);
+    return res.status(httpStatus.OK).send(cartItem);
+  } catch (error) {
+    next(error);
+  }
+}
