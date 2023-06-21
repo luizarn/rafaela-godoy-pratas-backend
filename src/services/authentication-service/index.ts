@@ -5,6 +5,7 @@ import { invalidCredentialsError } from './errors';
 import { exclude } from '@/utils/prisma-utils';
 import userRepository from '@/repositories/user-repository';
 import sessionRepository from '@/repositories/session-repository';
+import cartRepository from '@/repositories/cart-repository';
 
 async function signIn(params: SignInParams): Promise<SignInResult> {
   const { email, password } = params;
@@ -14,6 +15,8 @@ async function signIn(params: SignInParams): Promise<SignInResult> {
   await validatePasswordOrFail(password, user.password);
 
   const token = await createSession(user.id);
+
+  await createCart(user.id);
 
   return {
     user: exclude(user, 'password'),
@@ -47,6 +50,15 @@ async function createSession(userId: number) {
 async function validatePasswordOrFail(password: string, userPassword: string) {
   const isPasswordValid = await bcrypt.compare(password, userPassword);
   if (!isPasswordValid) throw invalidCredentialsError();
+}
+
+async function createCart(userId: number) {
+  const existingCart = await cartRepository.findByUserId(userId);
+  if (existingCart) {
+    return existingCart;
+  }
+
+  return await cartRepository.create(userId);
 }
 
 export type SignInParams = Pick<User, 'email' | 'password'>;
