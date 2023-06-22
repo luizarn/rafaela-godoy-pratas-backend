@@ -137,3 +137,18 @@ export async function listProductsByLaunch(
     next(e);
   }
 }
+
+export async function updateProductByCart(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+): Promise<Response> {
+  const { id } = req.params;
+  const { quantityChange } = req.body;
+  try {
+    const product = await productsService.updateProductByCart(Number(id), Number(quantityChange));
+    return res.status(httpStatus.OK).send(product);
+  } catch (e) {
+    next(e);
+  }
+}

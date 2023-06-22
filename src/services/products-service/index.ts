@@ -135,6 +135,14 @@ async function validateLimitLaunch() {
   }
 }
 
+async function updateProductByCart(id: number, quantityChange: number) {
+  const productUpdated = await productsRepository.updateProductByCart(id, quantityChange);
+
+  if (!productUpdated) throw notFoundError();
+
+  return productUpdated;
+}
+
 const productsService = {
   createProduct,
   listProductsByCategory,
@@ -148,6 +156,7 @@ const productsService = {
   listProductsByEmphasis,
   validateLimitEmphasis,
   validateLimitLaunch,
+  updateProductByCart,
 };
 
 export * from './errors';
