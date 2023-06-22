@@ -7,10 +7,10 @@ import { notFoundError } from '@/errors';
 
 export type ProductParams = Omit<CartItem, 'createdAt' | 'updatedAt' | 'id'>;
 
-export async function createCartItem(userId: number, productId: number, quantity: number): Promise<CartItem> {
+export async function createOrUpdateCartItem(userId: number, productId: number, quantity: number): Promise<CartItem> {
   const cart = await validateIfHasCart(userId);
 
-  return cartRepository.createCartItem(cart.id, productId, quantity);
+  return cartRepository.createOrUpdateCartItem(cart.id, productId, quantity);
 }
 
 export async function listCartItems(userId: number) {
@@ -73,7 +73,7 @@ async function deleteCartItem(id: number, userId: number) {
 // }
 
 const cartService = {
-  createCartItem,
+  createOrUpdateCartItem,
   listCartItems,
   deleteCartItem,
 };

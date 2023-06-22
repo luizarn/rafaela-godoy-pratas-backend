@@ -12,6 +12,7 @@ import {
   listProductsByEmphasis,
   listProductsByLaunch,
   updateProduct,
+  updateProductByCart,
 } from '@/controllers';
 
 const productsRouter = Router();
@@ -26,8 +27,9 @@ productsRouter
   .get('/:category', listProductsByCategory)
   .get('/produtos/:title', listProductByTitle)
   .all('/*', authenticateToken)
+  .put('/produtos/:id', updateProductByCart)
   .all('/*', authenticateOwner)
-  .post('/produtos', uploadImage, handleUpload, validateBody(createProductSchema), createProduct)
-  .put('/produtos/:id', updateProduct)
-  .delete('/produtos/:id', deleteProduct);
+  .post('/admin/produtos', uploadImage, handleUpload, validateBody(createProductSchema), createProduct)
+  .put('/admin/produtos/:id', updateProduct)
+  .delete('/admin/produtos/:id', deleteProduct);
 export { productsRouter };

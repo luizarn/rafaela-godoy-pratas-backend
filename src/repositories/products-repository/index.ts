@@ -87,6 +87,15 @@ async function listProductsByLaunch() {
   });
 }
 
+async function updateProductByCart(id: number, quantityChange: number) {
+  return prisma.product.update({
+    where: {
+      id,
+    },
+    data: { quantity: { [quantityChange > 0 ? 'increment' : 'decrement']: Math.abs(quantityChange) } },
+  });
+}
+
 const productsRepository = {
   findByTitle,
   create,
@@ -99,6 +108,7 @@ const productsRepository = {
   getProducts,
   listProductsByLaunch,
   listProductsByEmphasis,
+  updateProductByCart,
 };
 
 export default productsRepository;

@@ -1,6 +1,8 @@
 import { CartItem, Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 import { notFoundError } from '@/errors';
+import { updateProductByCart } from '@/controllers';
+import productsRepository from '../products-repository';
 
 export type CartItemParams = Omit<CartItem, 'createdAt' | 'updatedAt' | 'id'>;
 
@@ -20,14 +22,36 @@ async function findByUserId(userId: number) {
   });
 }
 
-async function createCartItem(cartId: number, productId: number, quantity: number) {
-  return await prisma.cartItem.create({
-    data: {
-      cartId,
-      productId,
-      quantity,
+async function createOrUpdateCartItem(cartId: number, productId: number, quantity: number) {
+  const existingCartItem = await prisma.cartItem.findUnique({
+    where: {
+      productId: productId,
     },
   });
+
+  let result;
+
+  if (existingCartItem) {
+    result = await prisma.cartItem.update({
+      where: {
+        productId: productId,
+      },
+      data: {
+        quantity: quantity,
+      },
+    });
+    await productsRepository.updateProductByCart(productId, existingCartItem.quantity);
+  } else {
+    result = await prisma.cartItem.create({
+      data: {
+        cartId: cartId,
+        productId: productId,
+        quantity: quantity,
+      },
+    });
+  }
+
+  return result;
 }
 
 async function listCartItems(cartId: number) {
@@ -71,7 +95,7 @@ async function deleteCartItem(id: number, cartId: number) {
 const cartRepository = {
   create,
   findByUserId,
-  createCartItem,
+  createOrUpdateCartItem,
   listCartItems,
   deleteCartItem,
 };
