@@ -1,6 +1,5 @@
 import { NextFunction, Response } from 'express';
 import httpStatus from 'http-status';
-import { Prisma } from '@prisma/client';
 import { AuthenticatedRequest } from '@/middlewares';
 import cartService from '@/services/cart-service';
 
