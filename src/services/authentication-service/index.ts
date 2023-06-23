@@ -31,6 +31,9 @@ async function getUserOrFail(email: string): Promise<GetUserOrFailResult> {
     password: true,
     name: true,
     isOwner: true,
+    cpf: true,
+    surname: true,
+    phone: true,
   });
   if (!user) throw invalidCredentialsError();
 

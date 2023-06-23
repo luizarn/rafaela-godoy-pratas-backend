@@ -5,6 +5,7 @@ import { usersRouter } from './routers/users-router';
 import { authenticationRouter } from './routers/authentication-router';
 import { productsRouter } from './routers/products-router';
 import { cartRouter } from './routers/cart-router';
+import { purchaseRouter } from './routers';
 
 // import { loadEnv, connectDb, disconnectDB } from '@/config';
 
@@ -18,7 +19,8 @@ app
   .use('/users', usersRouter)
   .use('/auth', authenticationRouter)
   .use('/', productsRouter)
-  .use('/cart', cartRouter);
+  .use('/cart', cartRouter)
+  .use('/purchase', purchaseRouter);
 
 export function init(): Promise<Express> {
   connectDb();

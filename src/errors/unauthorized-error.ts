@@ -3,6 +3,6 @@ import { ApplicationError } from '@/protocols';
 export function unauthorizedError(): ApplicationError {
   return {
     name: 'UnauthorizedError',
-    message: 'You must be signed in to continue',
+    message: 'Você deve estar logado(a) para efetuar a compra!',
   };
 }
