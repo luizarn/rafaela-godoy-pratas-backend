@@ -3,7 +3,7 @@ import Joi from 'joi';
 import { User } from '@prisma/client';
 
 const cpfValidationSchema = Joi.string().length(11).custom(joiCpfValidation).required();
-const mobilePhoneValidationSchema = Joi.string().min(14).max(15).custom(joiMobilePhoneValidation).required();
+const mobilePhoneValidationSchema = Joi.string().min(13).max(15).custom(joiMobilePhoneValidation).required();
 
 export const createUserSchema = Joi.object<CreateUserParams>({
   email: Joi.string().email().required(),
