@@ -1,18 +1,19 @@
-// import * as jwt from 'jsonwebtoken';
-// import { User } from '@prisma/client';
-
-// import { createUserIsNotOwner } from './factories';
+import * as jwt from 'jsonwebtoken';
+import { User } from '@prisma/client';
+import { createSession } from './factories/sessions-factory';
+import { createUserIsNotOwner } from './factories';
 import { prisma } from '@/config';
 
 export async function cleanDb() {
+  await prisma.session.deleteMany({});
   await prisma.user.deleteMany({});
 }
 
-// export async function generateValidToken(user?: User) {
-//   const incomingUser = user || (await createUserIsNotOwner());
-//   const token = jwt.sign({ userId: incomingUser.id }, process.env.JWT_SECRET);
+export async function generateValidToken(user?: User) {
+  const incomingUser = user || (await createUserIsNotOwner());
+  const token = jwt.sign({ userId: incomingUser.id }, process.env.JWT_SECRET);
 
-//   await createSession(token);
+  await createSession(token);
 
-//   return token;
-// }
+  return token;
+}

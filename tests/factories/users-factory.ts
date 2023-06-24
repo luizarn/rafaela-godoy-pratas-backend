@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 import faker from '@faker-js/faker';
 import { User } from '@prisma/client';
-import { prisma } from '@/config';
 import { generateCPF } from '@brazilian-utils/brazilian-utils';
+import { prisma } from '@/config';
 
 export async function createUserIsNotOwner(params: Partial<User> = {}): Promise<User> {
   const incomingPassword = params.password || faker.internet.password(6);
