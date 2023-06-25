@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { createProductSchema } from '@/schemas';
-import { validateBody, handleUpload, uploadImage, authenticateToken, authenticateOwner } from '@/middlewares';
+import { validateBody, handleUpload, authenticateToken, authenticateOwner } from '@/middlewares';
 import {
   createProduct,
   deleteProduct,
@@ -22,14 +22,13 @@ productsRouter
   .get('/emphasis', listProductsByEmphasis)
   .get('/launch', listProductsByLaunch)
   .get('/tags', getTags)
-  .get('/admin/products', getProducts)
-  .get('/tags', getTags)
   .get('/:category', listProductsByCategory)
-  .get('/produtos/:title', listProductByTitle)
+  .get('/category/:title', listProductByTitle)
   .all('/*', authenticateToken)
-  .put('/produtos/:id', updateProductByCart)
+  .put('/updateByCart/:id', updateProductByCart)
   .all('/*', authenticateOwner)
-  .post('/admin/produtos', uploadImage, handleUpload, validateBody(createProductSchema), createProduct)
-  .put('/admin/produtos/:id', updateProduct)
-  .delete('/admin/produtos/:id', deleteProduct);
+  .get('/admin', getProducts)
+  .post('/admin', handleUpload, validateBody(createProductSchema), createProduct)
+  .put('/admin/:id', updateProduct)
+  .delete('/admin/:id', deleteProduct);
 export { productsRouter };

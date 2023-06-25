@@ -30,7 +30,7 @@ async function validateIfHasCart(userId: number) {
 }
 
 async function deleteCartItem(id: number, userId: number) {
-  const cart = await validateIfHasCart(userId);
+  const cart = await cartRepository.findByUserId(userId);
 
   const cartItem = await cartRepository.deleteCartItem(id, cart.id);
 
@@ -38,39 +38,6 @@ async function deleteCartItem(id: number, userId: number) {
 
   return cartItem;
 }
-
-// async function listProductsByEmphasis() {
-//   const products = await productsRepository.listProductsByEmphasis();
-
-//   if (!products) throw notFoundError();
-
-//   return products;
-// }
-
-// async function listProductsByLaunch() {
-//   const products = await productsRepository.listProductsByLaunch();
-
-//   if (!products) throw notFoundError();
-
-//   return products;
-// }
-
-// async function validateLimitEmphasis() {
-//   const productsWithEmphasis = await listProductsByEmphasis();
-//   const emphasisLimit = 12;
-
-//   if (productsWithEmphasis.length >= emphasisLimit) {
-//     throw maximumLimitEmphasisError();
-//   }
-// }
-// async function validateLimitLaunch() {
-//   const productsWithLaunch = await listProductsByLaunch();
-//   const lauchLimit = 12;
-
-//   if (productsWithLaunch.length >= lauchLimit) {
-//     throw maximumLimitLaunchError();
-//   }
-// }
 
 const cartService = {
   createOrUpdateCartItem,

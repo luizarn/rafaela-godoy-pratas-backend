@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
+import { notFoundError } from '@/errors';
 
 async function getCategories() {
   return prisma.category.findMany();
@@ -40,6 +41,10 @@ async function listProductsByCategory(category: string) {
     },
   });
 
+  if (!result) {
+    throw notFoundError();
+  }
+
   return prisma.product.findMany({
     where: {
       categoryId: result.id,
@@ -60,7 +65,9 @@ async function updateProduct(id: number, updatedFields: object) {
     where: {
       id,
     },
-    data: updatedFields,
+    data: {
+      ...updatedFields,
+    },
   });
 }
 async function deleteProduct(id: number) {

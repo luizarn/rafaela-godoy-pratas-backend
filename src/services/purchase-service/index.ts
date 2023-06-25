@@ -1,6 +1,6 @@
+import { Purchase } from '@prisma/client';
 import { notFoundError } from '@/errors';
 import purchaseRepository from '@/repositories/purchase-repository';
-import { Purchase } from '@prisma/client';
 
 export type PurchaseParams = Omit<Purchase, 'createdAt' | 'updatedAt' | 'id' | 'date'>;
 

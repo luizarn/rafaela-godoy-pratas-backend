@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { ObjectSchema } from 'joi';
-import { invalidDataError } from '@/errors';
 
 export function validateBody<T>(schema: ObjectSchema<T>): ValidationMiddleware {
   return validate(schema, 'body');
@@ -13,7 +12,6 @@ export function validateParams<T>(schema: ObjectSchema<T>): ValidationMiddleware
 
 function validate(schema: ObjectSchema, type: 'body' | 'params') {
   return (req: Request, res: Response, next: NextFunction) => {
-    console.log('está chegando aqui');
     const { error } = schema.validate(req[type], {
       abortEarly: false,
     });

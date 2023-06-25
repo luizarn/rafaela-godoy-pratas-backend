@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '@/middlewares';
 import cartService from '@/services/cart-service';
 
-export async function createOrUpdateCartItem(req: AuthenticatedRequest, res: Response) {
+export async function createOrUpdateCartItem(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
     const { userId } = req;
     const { productId, quantity } = req.body;
@@ -11,7 +11,7 @@ export async function createOrUpdateCartItem(req: AuthenticatedRequest, res: Res
     const cart = await cartService.createOrUpdateCartItem(userId, productId, quantity);
     return res.status(httpStatus.CREATED).json({ id: cart.id });
   } catch (error) {
-    return res.status(httpStatus.BAD_REQUEST).send(console.log(error));
+    next(error);
   }
 }
 
