@@ -42,7 +42,9 @@ export async function authenticateOwner(req: AuthenticatedRequest, res: Response
         id: userId,
       },
     });
+
     if (owner.isOwner === true) return next();
+    throw unauthorizedError();
   } catch (err) {
     return generateUnauthorizedResponse(res);
   }

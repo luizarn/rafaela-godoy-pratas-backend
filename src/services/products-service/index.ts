@@ -106,6 +106,8 @@ async function deleteProduct(id: number) {
 async function listProductsByEmphasis() {
   const products = await productsRepository.listProductsByEmphasis();
 
+  if (!products) throw notFoundError();
+
   return products;
 }
 

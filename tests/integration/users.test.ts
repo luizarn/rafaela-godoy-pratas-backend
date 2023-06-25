@@ -74,8 +74,6 @@ describe('POST /users', () => {
     it('should save user on db', async () => {
       const body = generateValidBody();
 
-      console.log(body);
-
       const response = await server.post('/users').send(body);
 
       const user = await prisma.user.findUnique({

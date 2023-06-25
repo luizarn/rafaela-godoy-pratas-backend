@@ -35,10 +35,8 @@ export async function getProducts(req: CustomRequest, res: Response, next: NextF
 export async function createProduct(req: CustomRequest, res: Response) {
   try {
     const { userId } = req;
-    console.log(userId);
     const { title, description, price, categoryId, tagId, quantity, emphasis, launch } = req.body;
     const { publicUrl } = req;
-    console.log(`a imagem é ${publicUrl}`);
 
     const product = await productsService.createProduct({
       title,
@@ -89,7 +87,6 @@ export async function listProductByTitle(req: Request, res: Response, next: Next
 export async function updateProduct(req: CustomRequest, res: Response, next: NextFunction) {
   const { id } = req.params;
   const { updatedFields } = req.body;
-  console.log(updatedFields);
   if (!updatedFields) return res.sendStatus(httpStatus.BAD_REQUEST);
 
   try {

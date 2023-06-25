@@ -18,7 +18,7 @@ app
   .get('/health', (_req, res) => res.send('OK!'))
   .use('/users', usersRouter)
   .use('/auth', authenticationRouter)
-  .use('/', productsRouter)
+  .use('/products', productsRouter)
   .use('/cart', cartRouter)
   .use('/purchase', purchaseRouter)
   .use(handleApplicationErrors);
