@@ -2,8 +2,14 @@ import { Product } from '@prisma/client';
 import { duplicatedTitleError, maximumLimitEmphasisError, maximumLimitLaunchError } from './errors';
 import productsRepository from '@/repositories/products-repository';
 import { notFoundError } from '@/errors';
+import { badRequestError } from '@/errors/bad-request-error';
 
 export type ProductParams = Omit<Product, 'createdAt' | 'updatedAt' | 'id' | 'size'>;
+
+interface UpdatedFields {
+  emphasis?: boolean;
+  launch?: boolean;
+}
 
 async function getCategories() {
   const categories = await productsRepository.getCategories();
@@ -41,13 +47,12 @@ export async function createProduct({
   launch,
 }: ProductParams): Promise<Product> {
   await validateUniqueTitleOrFail(title);
-
   if (emphasis === true) {
-    validateLimitEmphasis();
+    await validateLimitEmphasis();
   }
 
   if (launch === true) {
-    validateLimitLaunch();
+    await validateLimitLaunch();
   }
 
   return productsRepository.create({
@@ -87,10 +92,12 @@ async function listProductByTitle(title: string) {
   return product;
 }
 
-async function updateProduct(id: number, updatedFields: object) {
+async function updateProduct(id: number, updatedFields: UpdatedFields) {
   const productUpdated = await productsRepository.updateProduct(id, updatedFields);
 
-  if (!productUpdated) throw notFoundError();
+  if (!productUpdated) {
+    throw notFoundError();
+  }
 
   return productUpdated;
 }
@@ -122,6 +129,7 @@ async function listProductsByLaunch() {
 async function validateLimitEmphasis() {
   const productsWithEmphasis = await listProductsByEmphasis();
   const emphasisLimit = 12;
+  console.log(productsWithEmphasis.length);
 
   if (productsWithEmphasis.length >= emphasisLimit) {
     throw maximumLimitEmphasisError();
@@ -139,7 +147,7 @@ async function validateLimitLaunch() {
 async function updateProductByCart(id: number, quantityChange: number) {
   const productUpdated = await productsRepository.updateProductByCart(id, quantityChange);
 
-  if (!productUpdated) throw notFoundError();
+  if (!productUpdated) throw badRequestError();
 
   return productUpdated;
 }

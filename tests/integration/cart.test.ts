@@ -199,7 +199,7 @@ describe('get /cart/user', () => {
   it('should respond with status 401 if given token is not valid', async () => {
     const token = faker.lorem.word();
 
-    const response = await server.post('/cart/user').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/cart/user').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
@@ -208,40 +208,17 @@ describe('get /cart/user', () => {
     const userWithoutSession = await createUserIsNotOwner();
     const token = jwt.sign({ userId: userWithoutSession.id }, process.env.JWT_SECRET);
 
-    const response = await server.post('/cart/user').set('Authorization', `Bearer ${token}`);
+    const response = await server.get('/cart/user').set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.UNAUTHORIZED);
   });
 
   describe('when token is valid', () => {
     it('should respond with status 404 if user has not cart', async () => {
-      const userbody = {
-        email: faker.internet.email(),
-        password: faker.internet.password(6),
-      };
-      const user = await createUserIsNotOwner(userbody);
-      await server.post('/auth/sign-in').send(userbody);
+      const user = await createUserIsNotOwner();
       const token = await generateValidToken(user);
 
-      const response = await server.post('/cart/user').set('Authorization', `Bearer ${token}`);
-
-      expect(response.status).toEqual(httpStatus.NOT_FOUND);
-    });
-
-    it('should respond with status 404 for not have cartItem wuth cart', async () => {
-      const userbody = {
-        email: faker.internet.email(),
-        password: faker.internet.password(6),
-      };
-      const user = await createUserIsNotOwner(userbody);
-      await server.post('/auth/sign-in').send(userbody);
-      const token = await generateValidToken(user);
-      const category = await createCategories();
-      const tag = await createTags();
-      const product = await createProductWithEmphasisAndLaunch(category, tag);
-      const cart = await cartRepository.findByUserId(user.id);
-
-      const response = await server.delete(`/cart/user`).set('Authorization', `Bearer ${token}`);
+      const response = await server.get('/cart/user').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });

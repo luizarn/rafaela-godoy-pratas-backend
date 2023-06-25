@@ -8,7 +8,13 @@ export function handleApplicationErrors(
   res: Response,
   _next: NextFunction,
 ) {
-  if (err.name === 'ConflictError' || err.name === 'DuplicatedEmailError' || err.name === 'DuplicatedTitleError') {
+  if (
+    err.name === 'ConflictError' ||
+    err.name === 'DuplicatedEmailError' ||
+    err.name === 'DuplicatedTitleError' ||
+    err.name === 'MaximumLimitLaunchError' ||
+    err.name === 'MaximumLimitEmphasisError'
+  ) {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message,
     });

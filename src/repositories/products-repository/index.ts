@@ -65,7 +65,9 @@ async function updateProduct(id: number, updatedFields: object) {
     where: {
       id,
     },
-    data: updatedFields,
+    data: {
+      ...updatedFields,
+    },
   });
 }
 async function deleteProduct(id: number) {

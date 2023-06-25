@@ -32,7 +32,7 @@ export async function getProducts(req: CustomRequest, res: Response, next: NextF
   }
 }
 
-export async function createProduct(req: CustomRequest, res: Response) {
+export async function createProduct(req: CustomRequest, res: Response, next: NextFunction) {
   try {
     const { userId } = req;
     const { title, description, price, categoryId, tagId, quantity, emphasis, launch } = req.body;
@@ -46,18 +46,15 @@ export async function createProduct(req: CustomRequest, res: Response) {
       categoryId: Number(categoryId),
       tagId: Number(tagId),
       publicUrl,
-      emphasis: emphasis === 'true',
-      launch: launch === 'true',
+      emphasis: Boolean(emphasis),
+      launch: Boolean(launch),
     });
     return res.status(httpStatus.CREATED).json({
       id: product.id,
       title: product.title,
     });
   } catch (error) {
-    if (error.name === 'DuplicatedTitleError') {
-      return res.status(httpStatus.CONFLICT).send(error);
-    }
-    return res.status(httpStatus.BAD_REQUEST).send(console.log(error));
+    next(error);
   }
 }
 
@@ -86,6 +83,7 @@ export async function listProductByTitle(req: Request, res: Response, next: Next
 
 export async function updateProduct(req: CustomRequest, res: Response, next: NextFunction) {
   const { id } = req.params;
+  console.log(id);
   const { updatedFields } = req.body;
   if (!updatedFields) return res.sendStatus(httpStatus.BAD_REQUEST);
 
@@ -133,6 +131,7 @@ export async function updateProductByCart(
 ): Promise<Response> {
   const { id } = req.params;
   const { quantityChange } = req.body;
+  if (!quantityChange) return res.sendStatus(httpStatus.BAD_REQUEST);
   try {
     const product = await productsService.updateProductByCart(Number(id), Number(quantityChange));
     return res.status(httpStatus.OK).send(product);
