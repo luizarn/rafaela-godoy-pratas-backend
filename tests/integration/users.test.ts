@@ -38,7 +38,7 @@ describe('POST /users', () => {
       surname: faker.name.lastName(),
       cpf: generateCPF(),
       isOwner: false,
-      phone: faker.phone.phoneNumber('(##) 9####-####'),
+      phone: '(61) 99000-0000',
     });
 
     it('should respond with status 409 when there is an user with given email', async () => {
@@ -74,6 +74,8 @@ describe('POST /users', () => {
     it('should save user on db', async () => {
       const body = generateValidBody();
 
+      console.log(body);
+
       const response = await server.post('/users').send(body);
 
       const user = await prisma.user.findUnique({
@@ -83,6 +85,11 @@ describe('POST /users', () => {
         expect.objectContaining({
           id: response.body.id,
           email: body.email,
+          name: body.name,
+          cpf: body.cpf,
+          surname: body.surname,
+          isOwner: body.isOwner,
+          phone: body.phone,
         }),
       );
     });

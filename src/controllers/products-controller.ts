@@ -1,11 +1,11 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import httpStatus from 'http-status';
 import { Prisma } from '@prisma/client';
 import productsService from '@/services/products-service';
 import { CustomRequest } from '@/middlewares/upload-image-middleware';
 import { AuthenticatedRequest } from '@/middlewares';
 
-export async function getCategories(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+export async function getCategories(req: Request, res: Response, next: NextFunction): Promise<Response> {
   try {
     const categories = await productsService.getCategories();
     return res.status(httpStatus.OK).send(categories);
@@ -14,7 +14,7 @@ export async function getCategories(req: AuthenticatedRequest, res: Response, ne
   }
 }
 
-export async function getTags(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+export async function getTags(req: Request, res: Response, next: NextFunction): Promise<Response> {
   try {
     const tags = await productsService.getTags();
     return res.status(httpStatus.OK).send(tags);
@@ -23,7 +23,7 @@ export async function getTags(req: AuthenticatedRequest, res: Response, next: Ne
   }
 }
 
-export async function getProducts(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response> {
+export async function getProducts(req: CustomRequest, res: Response, next: NextFunction): Promise<Response> {
   try {
     const products = await productsService.getProducts();
     return res.status(httpStatus.OK).send(products);
@@ -63,9 +63,8 @@ export async function createProduct(req: CustomRequest, res: Response) {
   }
 }
 
-export async function listProductsByCategory(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function listProductsByCategory(req: Request, res: Response, next: NextFunction) {
   const { category } = req.params;
-  if (!category) return res.sendStatus(httpStatus.BAD_REQUEST);
 
   try {
     const products = await productsService.listProductsByCategory(category);
@@ -75,7 +74,7 @@ export async function listProductsByCategory(req: AuthenticatedRequest, res: Res
   }
 }
 
-export async function listProductByTitle(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function listProductByTitle(req: Request, res: Response, next: NextFunction) {
   const { title } = req.params;
   if (!title) return res.sendStatus(httpStatus.BAD_REQUEST);
 
@@ -87,7 +86,7 @@ export async function listProductByTitle(req: AuthenticatedRequest, res: Respons
   }
 }
 
-export async function updateProduct(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function updateProduct(req: CustomRequest, res: Response, next: NextFunction) {
   const { id } = req.params;
   const { updatedFields } = req.body;
   console.log(updatedFields);
@@ -101,22 +100,18 @@ export async function updateProduct(req: AuthenticatedRequest, res: Response, ne
   }
 }
 
-export async function deleteProduct(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function deleteProduct(req: CustomRequest, res: Response, next: NextFunction) {
   const { id } = req.params;
 
   try {
     const product = await productsService.deleteProduct(Number(id));
     return res.status(httpStatus.OK).send(product);
-  } catch (error) {
-    next(error);
+  } catch (e) {
+    next(e);
   }
 }
 
-export async function listProductsByEmphasis(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction,
-): Promise<Response> {
+export async function listProductsByEmphasis(req: Request, res: Response, next: NextFunction): Promise<Response> {
   try {
     const products = await productsService.listProductsByEmphasis();
     return res.status(httpStatus.OK).send(products);
@@ -125,11 +120,7 @@ export async function listProductsByEmphasis(
   }
 }
 
-export async function listProductsByLaunch(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction,
-): Promise<Response> {
+export async function listProductsByLaunch(req: Request, res: Response, next: NextFunction): Promise<Response> {
   try {
     const products = await productsService.listProductsByLaunch();
     return res.status(httpStatus.OK).send(products);

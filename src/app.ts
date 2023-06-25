@@ -1,15 +1,15 @@
+import 'reflect-metadata';
+import 'express-async-errors';
 import express, { Express } from 'express';
 import cors from 'cors';
-import { connectDb, disconnectDB, loadEnv } from './config';
-import { usersRouter } from './routers/users-router';
-import { authenticationRouter } from './routers/authentication-router';
-import { productsRouter } from './routers/products-router';
-import { cartRouter } from './routers/cart-router';
-import { purchaseRouter } from './routers';
 
-// import { loadEnv, connectDb, disconnectDB } from '@/config';
+import { loadEnv, connectDb, disconnectDB } from '@/config';
 
 loadEnv();
+
+import { handleApplicationErrors } from '@/middlewares';
+
+import { usersRouter, authenticationRouter, productsRouter, cartRouter, purchaseRouter } from '@/routers';
 
 const app = express();
 app
@@ -20,7 +20,8 @@ app
   .use('/auth', authenticationRouter)
   .use('/', productsRouter)
   .use('/cart', cartRouter)
-  .use('/purchase', purchaseRouter);
+  .use('/purchase', purchaseRouter)
+  .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
   connectDb();

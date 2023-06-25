@@ -73,8 +73,9 @@ async function validateUniqueTitleOrFail(title: string) {
 async function listProductsByCategory(category: string) {
   const products = await productsRepository.listProductsByCategory(category);
 
-  if (!products) throw notFoundError();
-
+  if (!products) {
+    throw notFoundError();
+  }
   return products;
 }
 
@@ -104,8 +105,6 @@ async function deleteProduct(id: number) {
 
 async function listProductsByEmphasis() {
   const products = await productsRepository.listProductsByEmphasis();
-
-  if (!products) throw notFoundError();
 
   return products;
 }

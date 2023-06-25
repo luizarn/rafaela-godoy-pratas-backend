@@ -22,14 +22,13 @@ productsRouter
   .get('/emphasis', listProductsByEmphasis)
   .get('/launch', listProductsByLaunch)
   .get('/tags', getTags)
-  .get('/admin/products', getProducts)
-  .get('/tags', getTags)
   .get('/:category', listProductsByCategory)
   .get('/produtos/:title', listProductByTitle)
   .all('/*', authenticateToken)
   .put('/produtos/:id', updateProductByCart)
   .all('/*', authenticateOwner)
-  .post('/admin/produtos', uploadImage, handleUpload, validateBody(createProductSchema), createProduct)
+  .get('/admin/products', getProducts)
+  .post('/admin/products', uploadImage, handleUpload, validateBody(createProductSchema), createProduct)
   .put('/admin/produtos/:id', updateProduct)
   .delete('/admin/produtos/:id', deleteProduct);
 export { productsRouter };
