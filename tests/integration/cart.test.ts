@@ -100,7 +100,7 @@ describe('post /cart', () => {
   });
 });
 
-describe('delete /cart/user/:cartItemid', () => {
+describe('delete /cart/user/:cartItemId', () => {
   it('should respond with status 401 if no token is given', async () => {
     const userbody = {
       email: faker.internet.email(),
@@ -224,6 +224,24 @@ describe('get /cart/user', () => {
       const token = await generateValidToken(user);
 
       const response = await server.post('/cart/user').set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toEqual(httpStatus.NOT_FOUND);
+    });
+
+    it('should respond with status 404 for not have cartItem wuth cart', async () => {
+      const userbody = {
+        email: faker.internet.email(),
+        password: faker.internet.password(6),
+      };
+      const user = await createUserIsNotOwner(userbody);
+      await server.post('/auth/sign-in').send(userbody);
+      const token = await generateValidToken(user);
+      const category = await createCategories();
+      const tag = await createTags();
+      const product = await createProductWithEmphasisAndLaunch(category, tag);
+      const cart = await cartRepository.findByUserId(user.id);
+
+      const response = await server.delete(`/cart/user`).set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toEqual(httpStatus.NOT_FOUND);
     });
