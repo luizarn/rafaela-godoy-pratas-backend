@@ -37,6 +37,7 @@ export async function createProduct(req: CustomRequest, res: Response, next: Nex
     const { userId } = req;
     const { title, description, price, categoryId, tagId, quantity, emphasis, launch } = req.body;
     const { publicUrl } = req;
+    console.log(emphasis);
 
     const product = await productsService.createProduct({
       title,
@@ -46,8 +47,8 @@ export async function createProduct(req: CustomRequest, res: Response, next: Nex
       categoryId: Number(categoryId),
       tagId: Number(tagId),
       publicUrl,
-      emphasis: Boolean(emphasis),
-      launch: Boolean(launch),
+      emphasis: JSON.parse(emphasis),
+      launch: JSON.parse(launch),
     });
     return res.status(httpStatus.CREATED).json({
       id: product.id,

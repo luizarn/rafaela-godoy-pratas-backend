@@ -3,6 +3,7 @@ import { duplicatedTitleError, maximumLimitEmphasisError, maximumLimitLaunchErro
 import productsRepository from '@/repositories/products-repository';
 import { notFoundError } from '@/errors';
 import { badRequestError } from '@/errors/bad-request-error';
+import { Decimal } from '@prisma/client/runtime';
 
 export type ProductParams = Omit<Product, 'createdAt' | 'updatedAt' | 'id' | 'size'>;
 
@@ -47,6 +48,8 @@ export async function createProduct({
   launch,
 }: ProductParams): Promise<Product> {
   await validateUniqueTitleOrFail(title);
+  console.log('a primeira tentativa');
+  console.log(emphasis);
   if (emphasis === true) {
     await validateLimitEmphasis();
   }
@@ -54,18 +57,23 @@ export async function createProduct({
   if (launch === true) {
     await validateLimitLaunch();
   }
+  console.log('a segunda tentativa');
+  console.log(emphasis);
+  const priceNumber = new Decimal(price).toNumber();
 
-  return productsRepository.create({
+  const result = await productsRepository.create(
     title,
     description,
-    price,
+    priceNumber,
     categoryId,
     tagId,
     publicUrl,
     quantity,
     emphasis,
     launch,
-  });
+  );
+  console.log(result);
+  return result;
 }
 
 async function validateUniqueTitleOrFail(title: string) {
@@ -134,6 +142,7 @@ async function validateLimitEmphasis() {
   if (productsWithEmphasis.length >= emphasisLimit) {
     throw maximumLimitEmphasisError();
   }
+  console.log('validou');
 }
 async function validateLimitLaunch() {
   const productsWithLaunch = await listProductsByLaunch();
