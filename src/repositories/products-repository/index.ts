@@ -27,11 +27,31 @@ async function findByTitle(title: string) {
   });
 }
 
-async function create(data: Prisma.ProductUncheckedCreateInput) {
-  const result = await prisma.product.create({
-    data,
+async function create(
+  title: string,
+  description: string,
+  priceNumber: number,
+  categoryId: number,
+  tagId: number,
+  publicUrl: string,
+  quantity: number,
+  emphasis: boolean,
+  launch: boolean,
+) {
+  console.log(priceNumber, categoryId, tagId, description);
+  return await prisma.product.create({
+    data: {
+      title,
+      description,
+      price: priceNumber,
+      categoryId,
+      tagId,
+      publicUrl,
+      quantity,
+      emphasis,
+      launch,
+    },
   });
-  return result;
 }
 
 async function listProductsByCategory(category: string) {

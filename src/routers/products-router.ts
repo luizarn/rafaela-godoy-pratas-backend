@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { createProductSchema } from '@/schemas';
-import { validateBody, handleUpload, authenticateToken, authenticateOwner } from '@/middlewares';
+import { validateBody, handleUpload, authenticateToken, authenticateOwner, uploadImage } from '@/middlewares';
 import {
   createProduct,
   deleteProduct,
@@ -27,8 +27,8 @@ productsRouter
   .all('/*', authenticateToken)
   .put('/updateByCart/:id', updateProductByCart)
   .all('/*', authenticateOwner)
-  .get('/admin', getProducts)
-  .post('/admin', handleUpload, validateBody(createProductSchema), createProduct)
+  .get('/admin/list', getProducts)
+  .post('/admin/post', uploadImage, handleUpload, validateBody(createProductSchema), createProduct)
   .put('/admin/:id', updateProduct)
   .delete('/admin/:id', deleteProduct);
 export { productsRouter };
